@@ -1,22 +1,24 @@
 import java.util.Scanner;
 public class tictactoe {
-static int turn = 0;
-    public static void main(String [] args) {
-        Scanner input = new Scanner (System.in);
-        boolean gameover = false;
-        String ttt[][] = 
+static Scanner input = new Scanner(System.in);
+	static boolean gameValue = true, gameover = false;
+	static int first4moves = 0;
+    public static void main(String [] args) { 
+       	String ttt[][] = 
         {
         {"-" , "-" , "-"},
         {"-" , "-" , "-"},
         {"-" , "-" , "-"}, 
         };
-        
-        do {
+      	do {
         structure(ttt);
-        String[] value = {"x" , "o"};
-        turn = playerMove(input, ttt, value, turn);
-        gameover = checkwinner(ttt);
-        if (!gameover)  gameover = checkdraw( ttt);
+	gameValue = playerMove(ttt,gameValue);
+	first4moves++;
+        if (first4moves >= 3 )
+       	{
+	gameover = checkwinner(ttt);
+        if (!gameover)  gameover = checkdraw(ttt);
+       	}
         }while(gameover==false);
     }
     
@@ -38,10 +40,12 @@ static int turn = 0;
 
     }
 
-    public static int playerMove(Scanner input, String ttt[][], String[] value, int turn) {
-        System.out.println("It is " + value[turn] + "'s turn, pick where you want to place your value: ");
-        int row , col;
-        
+    public static boolean playerMove(String ttt[][], boolean gameValue) {
+	int row , col;
+        String value;
+	if (gameValue) value = "x";
+	else value = "o";
+	System.out.println("It's " + value + "'s turn");
         while (true) {   
         System.out.println("Which row? (1-3) ");
         row = input.nextInt() - 1;
@@ -55,19 +59,20 @@ static int turn = 0;
         }
     
      //perventing overwriting.  
+	
         if (ttt[row][col].equals("x") || ttt[row][col].equals("o")) 
              {
              System.out.println("YOU can't add value here");
              continue;
            }
            else {
-            ttt[row][col] = value[turn];
-            if (turn == 0) turn = 1;
-            else if (turn == 1) turn = 0;
-           return turn;
-           }   
+            ttt[row][col] = value;
+           return gameValue ? false : true ;
+        }   
         } 
     }
+
+
 
     public static boolean checkdraw( String[][] ttt) {
         for (int rows = 0; rows < ttt.length; rows++) 
@@ -83,6 +88,9 @@ static int turn = 0;
         System.out.println("it is a Draw");
         return true;
     }
+
+
+
 
     public static boolean checkwinner(String ttt[][]) {
      for (int p = 0; p < ttt.length; p++) 
